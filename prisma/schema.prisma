@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["deno"]
+  output          = "../generated/prisma"
+  engineType      = "library"
+}
+
+datasource db {
+  provider  = "mongodb"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+enum FieldType {
+  TEXT
+  NUMBER
+  DATE
+  BOOLEAN
+}
+
+model UserFormField {
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  fieldName          String
+  type               FieldType
+  owneridId     String               @db.ObjectId
+  Owner       Owner         @relation(fields: [owneridId], references: [id])
+  UserFormFieldValue UserFormFieldValue[]
+
+}
+
+model UserFormFieldValue {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  value           String
+  userFormFieldId String        @db.ObjectId
+  userFormField   UserFormField @relation(fields: [userFormFieldId], references: [id])
+  userId          String        @db.ObjectId
+  user            User          @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
+  UserFormFieldValue UserFormFieldValue[]
+}
+
+model Owner {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  email String @unique
+  UserFormField UserFormField[]
+}

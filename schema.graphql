@@ -1,0 +1,87 @@
+enum FieldType {
+  TEXT
+  NUMBER
+  DATE
+  BOOLEAN
+}
+
+type UserFormField {
+  id: String!
+  fieldName: String!
+  type: FieldType!
+}
+
+type UserFormFieldValue {
+  id: String!
+  userId: String!
+  userFormFieldId: String!
+  value: String!
+}
+
+type User {
+  id: String!
+  properties: [UserFormFieldValue!]!
+}
+
+type Owner {
+  id: String!
+  name: String!
+  email: String!
+}
+
+input UserFiltersInput {
+  filters: [Filter!]!
+}
+
+input Filter {
+  fieldId: String!
+  value: String!
+}
+
+input UserFormFieldInput {
+  fieldName: String!
+  type: FieldType!
+}
+
+input OwnerInput {
+  name: String!
+  email: String!
+}
+
+type CreateUserFormFieldPayload {
+  userFormField: UserFormField
+  success: Boolean!
+  message: String
+}
+
+type DeleteUserPayload {
+  success: Boolean!
+  message: String
+}
+
+type OwnerPayload {
+  owner: Owner
+  success: Boolean!
+  message: String
+}
+
+type Query {
+  users(filter: UserFiltersInput!): [User!]!
+  searchUsers(searchText: String!): [User!]!
+  organizationFormFields(organizationId: String!): [UserFormField!]!
+  owners: [Owner!]!
+  owner(id: String!): Owner
+}
+
+type Mutation {
+  createUserFormField(input: UserFormFieldInput!): CreateUserFormFieldPayload!
+  deleteUser(userId:String!): DeleteUserPayload!
+  createOwner(input: OwnerInput!): OwnerPayload!
+  updateOwner(id: String!, input: OwnerInput!): OwnerPayload!
+  deleteOwner(id: String!): OwnerPayload!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
