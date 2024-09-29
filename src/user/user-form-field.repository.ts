@@ -1,5 +1,5 @@
-import { userFormField } from "/src/user/models/user-form-field.model.ts";
-import { PrismaClientType } from "/src/common/db/prisma.ts";
+import { userFormField } from "./models/user-form-field.model";
+import { PrismaClientType } from "../common/db/prisma";
 
 export class UserFormFieldRepository {
     constructor(

@@ -1,26 +1,73 @@
-import { PrismaClient } from "@prisma/client";
-import { Owner } from "./models/owner.model.ts";
+import { PrismaClientType } from "../common/db/prisma";
+import { Owner } from "./models/owner";
+import { Organization } from "../organization/models/organization";
 
 export class OwnerRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClientType) {}
 
-  async findAll() {
-    return this.prisma.owner.findMany();
-  }
+  async findById(id: string): Promise<Owner | null> {
+    const result =  await this.prisma.owner.findUnique({ where: { id }, include: { organization: true }});
 
-  async findById(id: string) {
-    return this.prisma.owner.findUnique({ where: { id } });
-  }
-
-  async save(owner: Owner): Promise<Owner> {
-    return this.prisma.owner.upsert({
-      where: { id: owner.id || '' },
-      update: { name: owner.name, email: owner.email },
-      create: { name: owner.name, email: owner.email },
+    if(!result) return null;
+    
+    return new Owner({
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      organization: new Organization({ id: result.organization.id, name: result.organization.name })
     });
   }
 
-  async delete(id: string) {
-    return this.prisma.owner.delete({ where: { id } });
+  async create(owner: Owner): Promise<Owner> {
+    const result = await this.prisma.owner.create({
+      data: {
+        name: owner.name,
+        email: owner.email,
+        organization: {
+          connect: {
+            id: owner.organization.id
+          }
+        }
+      },
+      include: { organization: true }
+    });
+
+    return new Owner({
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      organization: new Organization({ id: result.organization.id, name: result.organization.name })
+    });
+  }
+
+  async update(owner: Owner): Promise<Owner> {
+    const result = await this.prisma.owner.update({
+      where: { id: owner.id },
+      data: {
+        name: owner.name,
+        email: owner.email,
+        organization: {
+          connect: {
+            id: owner.organization.id
+          }
+        }
+      },
+      include: { organization: true }
+    });
+
+    return new Owner({
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      organization: new Organization({ id: result.organization.id, name: result.organization.name })
+    });
+  }
+
+  async save(owner: Owner): Promise<Owner> {
+    if(owner.id){
+      return await this.update(owner);
+    } else {
+      return await this.create(owner);
+    }
   }
 }

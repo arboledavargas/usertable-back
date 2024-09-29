@@ -1,11 +1,14 @@
-import { Resolvers } from "./graphql.ts";
-import { userService, ownerService } from "/src/common/di.ts";
+import { Resolvers } from "./graphql";
+import { userService, ownerService, organizationService } from "./common/di";
+import { YogaInitialContext } from "graphql-yoga";
+import { AuthResult } from "express-oauth2-jwt-bearer";
 
-export var resolvers:Resolvers = {
+export interface GraphQlContext extends YogaInitialContext {
+    userId: string
+}
+
+export var resolvers:Resolvers<GraphQlContext> = {
     Query: {
-        owners: async () => {
-            return await ownerService.getAllOwners();
-        },
         owner: async (_, { id }) => {
             return await ownerService.getOwnerById(id);
         },
@@ -14,14 +17,15 @@ export var resolvers:Resolvers = {
         createUserFormField: async (_, args, __, ___) => {
             return await userService.createUserFormField(args.input)
         },
-        createOwner: async (_, { input }) => {
-            return await ownerService.createOwner(input);
-        },
-        updateOwner: async (_, { id, input }) => {
-            return await ownerService.updateOwner(id, input);
-        },
-        deleteOwner: async (_, { id }) => {
-            return await ownerService.deleteOwner(id);
-        },
+        createOrganization: async (_, { input }, context) => {
+
+            return await organizationService.createOrganization(
+                input, 
+                { 
+                    email: input.userMail, 
+                    name: input.userName, 
+                    authId: context.userId 
+                });
+        }
     }
 }

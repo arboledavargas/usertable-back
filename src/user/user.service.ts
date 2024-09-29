@@ -1,6 +1,6 @@
-import { userFormField } from "/src/user/models/user-form-field.model.ts";
-import { UserFormFieldRepository } from "/src/user/user-form-field.repository.ts";
-import { UserFormFieldInput, CreateUserFormFieldPayload } from "/src/graphql.ts";
+import { userFormField } from "./models/user-form-field.model";
+import { UserFormFieldRepository } from "./user-form-field.repository";
+import { UserFormFieldInput, CreateUserFormFieldPayload } from "../graphql";
 
 export class UserService {
     constructor(

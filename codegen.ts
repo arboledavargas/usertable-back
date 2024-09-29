@@ -1,5 +1,4 @@
 import type { CodegenConfig } from '@graphql-codegen/cli';
-import { generate } from '@graphql-codegen/cli'
 
 const config: CodegenConfig = {
   schema: 'schema.graphql',
@@ -7,10 +6,11 @@ const config: CodegenConfig = {
     './src/graphql.ts': {
       config: {
         useIndexSignature: true,
+        contextTypes: './main#GraphQlContext',
       },
       plugins: ['typescript', 'typescript-resolvers'],
     },
   },
 };
 
-const output = await generate(config, true)
+export default config;

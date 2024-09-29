@@ -2,16 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["deno"]
-  output          = "../generated/prisma"
-  engineType      = "library"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "mongodb"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_DATABASE_URL")
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 enum FieldType {
@@ -25,10 +21,10 @@ model UserFormField {
   id                 String               @id @default(auto()) @map("_id") @db.ObjectId
   fieldName          String
   type               FieldType
-  owneridId     String               @db.ObjectId
-  Owner       Owner         @relation(fields: [owneridId], references: [id])
+  owneridId          String               @db.ObjectId
+  organizationid     String               @db.ObjectId
+  organization       Organization         @relation(fields: [organizationid], references: [id])
   UserFormFieldValue UserFormFieldValue[]
-
 }
 
 model UserFormFieldValue {
@@ -46,8 +42,17 @@ model User {
 }
 
 model Owner {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  email          String       @unique
+  organizationid String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationid], references: [id])
+}
+
+model Organization {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
-  email String @unique
+
+  Owner         Owner[]
   UserFormField UserFormField[]
 }

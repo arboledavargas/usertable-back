@@ -1,13 +1,17 @@
-import { UserFormFieldRepository } from "/src/user/user-form-field.repository.ts";
-import { UserService } from "/src/user/user.service.ts";
-import { OwnerRepository } from "/src/owner/owner.repository.ts";
-import { OwnerService } from "/src/owner/owner.service.ts";
-import { prisma } from "/src/common/db/prisma.ts";
+import { UserFormFieldRepository } from "../user/user-form-field.repository";
+import { UserService } from "../user/user.service";
+import { OwnerRepository } from "../owner/owner.repository";
+import { OwnerService } from "../owner/owner.service";
+import { prisma } from "../common/db/prisma";
+import { OrganizationService } from "../organization/organization.service";
+import { OrganizationRepository } from "../organization/organization.repository";
 
 const userFormFieldRepository = new UserFormFieldRepository(prisma);
 const userService = new UserService(userFormFieldRepository);
 
 const ownerRepository = new OwnerRepository(prisma);
 const ownerService = new OwnerService(ownerRepository);
+const organizationRepository = new OrganizationRepository(prisma);
+const organizationService = new OrganizationService(organizationRepository, ownerRepository);
 
-export { userService, userFormFieldRepository, ownerService, ownerRepository }
+export { userService, userFormFieldRepository, ownerService, ownerRepository, organizationService }

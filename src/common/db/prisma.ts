@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from '@prisma/extension-accelerate';
 
 const createPrisma = () => {
-    return new PrismaClient().$extends(withAccelerate());
+    return new PrismaClient();
 };
 
 export type PrismaClientType = ReturnType<typeof createPrisma>;
