@@ -5,8 +5,8 @@ import { Organization } from "../organization/models/organization";
 export class OwnerRepository {
   constructor(private prisma: PrismaClientType) {}
 
-  async findById(id: string): Promise<Owner | null> {
-    const result =  await this.prisma.owner.findUnique({ where: { id }, include: { organization: true }});
+  async findByAuthId(id: string): Promise<Owner | null> {
+    const result =  await this.prisma.owner.findUnique({ where: { authId: id }, include: { organization: true }});
 
     if(!result) return null;
     
@@ -14,7 +14,8 @@ export class OwnerRepository {
       id: result.id,
       name: result.name,
       email: result.email,
-      organization: new Organization({ id: result.organization.id, name: result.organization.name })
+      organization: new Organization({ id: result.organization.id, name: result.organization.name }),
+      authId: result.authId
     });
   }
 
@@ -23,6 +24,7 @@ export class OwnerRepository {
       data: {
         name: owner.name,
         email: owner.email,
+        authId: owner.authId,
         organization: {
           connect: {
             id: owner.organization.id
@@ -36,7 +38,8 @@ export class OwnerRepository {
       id: result.id,
       name: result.name,
       email: result.email,
-      organization: new Organization({ id: result.organization.id, name: result.organization.name })
+      organization: new Organization({ id: result.organization.id, name: result.organization.name }),
+      authId: result.authId
     });
   }
 
@@ -59,7 +62,8 @@ export class OwnerRepository {
       id: result.id,
       name: result.name,
       email: result.email,
-      organization: new Organization({ id: result.organization.id, name: result.organization.name })
+      organization: new Organization({ id: result.organization.id, name: result.organization.name }),
+      authId: result.authId
     });
   }
 

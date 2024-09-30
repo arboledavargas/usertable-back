@@ -23,7 +23,8 @@ export class OrganizationService {
             id: '',
             name: owner.name,
             email: owner.email,
-            organization: savedOrganization
+            organization: savedOrganization,
+            authId: owner.authId
         });
 
         await this.ownerRepository.save(newOwner);

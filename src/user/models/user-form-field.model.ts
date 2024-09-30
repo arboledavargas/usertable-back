@@ -12,7 +12,7 @@ export class userFormField implements Model {
         fieldName: string, 
         type: FieldType, 
         organizationId: string,
-        id: string
+        id: string,
     }){
         this.fieldName = props.fieldName;
         this.type = props.type;

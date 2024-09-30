@@ -76,7 +76,7 @@ type Query {
   users(filter: UserFiltersInput!): [User!]!
   searchUsers(searchText: String!): [User!]!
   organizationFormFields(organizationId: String!): [UserFormField!]!
-  owner(id: String!): Owner
+  owner: Owner
 }
 
 type Mutation {

@@ -8,6 +8,8 @@ import { createYoga } from 'graphql-yoga';
 import { join } from "node:path";
 import { resolvers } from "./resolvers";
 import { Request } from "express";
+import helmet from 'helmet';
+import cors from 'cors';
 
 interface RequestWithAuth extends Request {
   auth: AuthResult
@@ -33,10 +35,10 @@ const yoga = createYoga({
     return { ...context, userId: sub }
   },
   cors: {
-    origin: 'https://studio.apollographql.com',
+    origin: ['https://studio.apollographql.com', 'http://localhost:5173'], // Allow both Apollo Studio and localhost
     credentials: true,
     methods: ['POST'],
-  },
+  }
 });
 
 const port = 3000;
@@ -48,6 +50,13 @@ const jwtCheck = auth({
 });
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true, // Ensure credentials are passed if needed
+}));
+
+app.use(helmet());
 
 app.use(jwtCheck);
 

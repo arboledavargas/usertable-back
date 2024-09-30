@@ -1,12 +1,14 @@
 {
     "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
+      "noEmitOnError": true,
       "target": "ESNext",                          // Use latest ECMAScript features
       "module": "ESNext",                          // Use ESModules (import/export syntax)
       "lib": ["ESNext"],                           // Include modern ES features
       "allowJs": false,                            // Disallow JavaScript files
       "strict": true,                              // Enable strict type-checking options
       "esModuleInterop": true,                     // Enable compatibility with CommonJS modules
+      "allowSyntheticDefaultImports": true,
       "forceConsistentCasingInFileNames": true,    // Enforce consistent file casing
       "moduleResolution": "Node",                  // Node.js module resolution strategy
       "skipLibCheck": true,                        // Skip type checking of declaration files

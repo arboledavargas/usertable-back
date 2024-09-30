@@ -4,6 +4,6 @@ export class OwnerService {
   constructor(private ownerRepository: OwnerRepository) {}
 
   async getOwnerById(id: string) {
-    return await this.ownerRepository.findById(id);
+    return await this.ownerRepository.findByAuthId(id);
   }
 }

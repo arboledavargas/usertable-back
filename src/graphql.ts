@@ -104,11 +104,6 @@ export type QueryOrganizationFormFieldsArgs = {
 };
 
 
-export type QueryOwnerArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type QuerySearchUsersArgs = {
   searchText: Scalars['String']['input'];
 };
@@ -301,7 +296,7 @@ export type OwnerResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   organizationFormFields?: Resolver<Array<ResolversTypes['UserFormField']>, ParentType, ContextType, RequireFields<QueryOrganizationFormFieldsArgs, 'organizationId'>>;
-  owner?: Resolver<Maybe<ResolversTypes['Owner']>, ParentType, ContextType, RequireFields<QueryOwnerArgs, 'id'>>;
+  owner?: Resolver<Maybe<ResolversTypes['Owner']>, ParentType, ContextType>;
   searchUsers?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QuerySearchUsersArgs, 'searchText'>>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'filter'>>;
 }>;

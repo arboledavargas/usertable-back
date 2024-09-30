@@ -7,11 +7,11 @@ import { OrganizationService } from "../organization/organization.service";
 import { OrganizationRepository } from "../organization/organization.repository";
 
 const userFormFieldRepository = new UserFormFieldRepository(prisma);
-const userService = new UserService(userFormFieldRepository);
 
 const ownerRepository = new OwnerRepository(prisma);
-const ownerService = new OwnerService(ownerRepository);
 const organizationRepository = new OrganizationRepository(prisma);
+const userService = new UserService(userFormFieldRepository, ownerRepository);
+const ownerService = new OwnerService(ownerRepository);
 const organizationService = new OrganizationService(organizationRepository, ownerRepository);
 
 export { userService, userFormFieldRepository, ownerService, ownerRepository, organizationService }

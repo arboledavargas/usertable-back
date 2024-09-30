@@ -1,7 +1,6 @@
 import { Resolvers } from "./graphql";
 import { userService, ownerService, organizationService } from "./common/di";
 import { YogaInitialContext } from "graphql-yoga";
-import { AuthResult } from "express-oauth2-jwt-bearer";
 
 export interface GraphQlContext extends YogaInitialContext {
     userId: string
@@ -9,13 +8,13 @@ export interface GraphQlContext extends YogaInitialContext {
 
 export var resolvers:Resolvers<GraphQlContext> = {
     Query: {
-        owner: async (_, { id }) => {
-            return await ownerService.getOwnerById(id);
+        owner: async (_, __, { userId }) => {
+            return await ownerService.getOwnerById(userId);
         },
     },
     Mutation: {
-        createUserFormField: async (_, args, __, ___) => {
-            return await userService.createUserFormField(args.input)
+        createUserFormField: async (_, args, { userId }) => {
+            return await userService.createUserFormField(args.input, userId)
         },
         createOrganization: async (_, { input }, context) => {
 
