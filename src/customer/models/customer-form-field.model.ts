@@ -1,7 +1,7 @@
 import { Model } from "../../common/primitives";
 import { FieldType } from "@prisma/client";
 
-export class userFormField implements Model {
+export class customerFormField implements Model {
 
     id: string;
     fieldName: string;

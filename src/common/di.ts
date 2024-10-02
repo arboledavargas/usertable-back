@@ -1,17 +1,17 @@
-import { UserFormFieldRepository } from "../user/user-form-field.repository";
-import { UserService } from "../user/user.service";
+import { CustomerFormFieldRepository } from "../customer/customer-form-field.repository";
+import { CustomerService } from "../customer/customer.service";
 import { OwnerRepository } from "../owner/owner.repository";
 import { OwnerService } from "../owner/owner.service";
 import { prisma } from "../common/db/prisma";
 import { OrganizationService } from "../organization/organization.service";
 import { OrganizationRepository } from "../organization/organization.repository";
 
-const userFormFieldRepository = new UserFormFieldRepository(prisma);
+const customerFormFieldRepository = new CustomerFormFieldRepository(prisma);
 
 const ownerRepository = new OwnerRepository(prisma);
 const organizationRepository = new OrganizationRepository(prisma);
-const userService = new UserService(userFormFieldRepository, ownerRepository);
+const customerService = new CustomerService(customerFormFieldRepository, ownerRepository);
 const ownerService = new OwnerService(ownerRepository);
 const organizationService = new OrganizationService(organizationRepository, ownerRepository);
 
-export { userService, userFormFieldRepository, ownerService, ownerRepository, organizationService }
+export { customerService, customerFormFieldRepository, ownerService, ownerRepository, organizationService }

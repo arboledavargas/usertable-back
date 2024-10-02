@@ -1,15 +1,15 @@
-import { userFormField } from "./models/user-form-field.model";
-import { UserFormFieldRepository } from "./user-form-field.repository";
-import { UserFormFieldInput, CreateUserFormFieldPayload } from "../graphql";
+import { customerFormField } from "./models/customer-form-field.model";
+import { CustomerFormFieldRepository } from "./customer-form-field.repository";
+import { CustomerFormFieldInput, CreateCustomerFormFieldPayload } from "../graphql";
 import { OwnerRepository } from "../owner/owner.repository";
 
-export class UserService {
+export class CustomerService {
     constructor(
-        private readonly userFormFieldRepository: UserFormFieldRepository,
+        private readonly customerFormFieldRepository: CustomerFormFieldRepository,
         private readonly ownerRepository: OwnerRepository
     ) {  }
 
-    async createUserFormField(input: UserFormFieldInput, ownerAuthId: string): Promise<CreateUserFormFieldPayload> {
+    async createCustomerFormField(input: CustomerFormFieldInput, ownerAuthId: string): Promise<CreateCustomerFormFieldPayload> {
     
         const owner = await this.ownerRepository.findByAuthId(ownerAuthId);
 
@@ -17,19 +17,19 @@ export class UserService {
             throw new Error('Owner not found');
         }
 
-        const newUserFormField = new userFormField({
+        const newCustomerFormField = new customerFormField({
             id: '',
             fieldName: input.fieldName,
             type: input.type,
             organizationId: owner.organization.id,
         });
 
-        await this.userFormFieldRepository.save(newUserFormField);
+        await this.customerFormFieldRepository.save(newCustomerFormField);
 
         return {
             success: true,
             message: null,
-            userFormField: {
+            customerFormField: {
                 fieldName: input.fieldName,
                 type: input.type,
                 id: ''

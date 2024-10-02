@@ -1,5 +1,5 @@
 import { Resolvers } from "./graphql";
-import { userService, ownerService, organizationService } from "./common/di";
+import { customerService, ownerService, organizationService } from "./common/di";
 import { YogaInitialContext } from "graphql-yoga";
 
 export interface GraphQlContext extends YogaInitialContext {
@@ -13,8 +13,8 @@ export var resolvers:Resolvers<GraphQlContext> = {
         },
     },
     Mutation: {
-        createUserFormField: async (_, args, { userId }) => {
-            return await userService.createUserFormField(args.input, userId)
+        createCustomerFormField: async (_, { input }, { userId }) => {
+            return await customerService.createCustomerFormField(input, userId)
         },
         createOrganization: async (_, { input }, context) => {
 

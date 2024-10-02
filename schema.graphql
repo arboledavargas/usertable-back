@@ -10,22 +10,22 @@ type Organization {
   name: String!
 }
 
-type UserFormField {
+type CustomerFormField {
   id: String!
   fieldName: String!
   type: FieldType!
 }
 
-type UserFormFieldValue {
+type CustomerFormFieldValue {
   id: String!
-  userId: String!
-  userFormFieldId: String!
+  customerId: String!
+  customerFormFieldId: String!
   value: String!
 }
 
-type User {
+type Customer {
   id: String!
-  properties: [UserFormFieldValue!]!
+  properties: [CustomerFormFieldValue!]!
 }
 
 type Owner {
@@ -35,7 +35,7 @@ type Owner {
   organization: Organization!
 }
 
-input UserFiltersInput {
+input CustomerFiltersInput {
   filters: [Filter!]!
 }
 
@@ -44,7 +44,7 @@ input Filter {
   value: String!
 }
 
-input UserFormFieldInput {
+input CustomerFormFieldInput {
   fieldName: String!
   type: FieldType!
 }
@@ -55,8 +55,8 @@ input OrganizationInput {
   userName: String!
 }
 
-type CreateUserFormFieldPayload {
-  userFormField: UserFormField
+type CreateCustomerFormFieldPayload {
+  customerFormField: CustomerFormField
   success: Boolean!
   message: String
 }
@@ -67,21 +67,21 @@ type CreateOrganizationPayload {
   message: String
 }
 
-type DeleteUserPayload {
+type DeleteCustomerPayload {
   success: Boolean!
   message: String
 }
 
 type Query {
-  users(filter: UserFiltersInput!): [User!]!
-  searchUsers(searchText: String!): [User!]!
-  organizationFormFields(organizationId: String!): [UserFormField!]!
+  filterCustomers(filter: CustomerFiltersInput!): [Customer!]!
+  searchCustomers(searchText: String!): [Customer!]!
+  getOrganizationCustomerFormFields(organizationId: String!): [CustomerFormField!]!
   owner: Owner
 }
 
 type Mutation {
-  createUserFormField(input: UserFormFieldInput!): CreateUserFormFieldPayload!
-  deleteUser(userId: String!): DeleteUserPayload!
+  createCustomerFormField(input: CustomerFormFieldInput!): CreateCustomerFormFieldPayload!
+  deleteCustomer(userId: String!): DeleteCustomerPayload!
   createOrganization(input: OrganizationInput!): CreateOrganizationPayload
 }
 

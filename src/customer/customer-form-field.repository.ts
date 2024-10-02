@@ -1,12 +1,12 @@
-import { userFormField } from "./models/user-form-field.model";
+import { customerFormField } from "./models/customer-form-field.model";
 import { PrismaClientType } from "../common/db/prisma";
 
-export class UserFormFieldRepository {
+export class CustomerFormFieldRepository {
     constructor(
         private prisma: PrismaClientType
     ){  }
 
-    private async create(formField: userFormField): Promise<userFormField> {
+    private async create(formField: customerFormField): Promise<customerFormField> {
         const result = await this.prisma.userFormField.create({
             data: { 
                 fieldName: formField.fieldName, 
@@ -15,7 +15,7 @@ export class UserFormFieldRepository {
             }
         });
 
-        return new userFormField({
+        return new customerFormField({
             fieldName: result.fieldName,
             type: result.type,
             organizationId: result.organizationid,
@@ -23,7 +23,7 @@ export class UserFormFieldRepository {
         });
     }
 
-    private async update(formField: userFormField): Promise<userFormField> {
+    private async update(formField: customerFormField): Promise<customerFormField> {
         const result = await this.prisma.userFormField.update({
             where: {id: formField.id},
             data: {
@@ -32,7 +32,7 @@ export class UserFormFieldRepository {
             }
         });
 
-        return new userFormField({
+        return new customerFormField({
             fieldName: result.fieldName,
             type: result.type,
             organizationId: result.organizationid,
@@ -40,7 +40,7 @@ export class UserFormFieldRepository {
         });
     }
 
-    async save(model:userFormField): Promise<userFormField>{
+    async save(model:customerFormField): Promise<customerFormField>{
 
         if(model.id) {
             return await this.create(model)
