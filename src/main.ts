@@ -1,7 +1,7 @@
+import 'dotenv/config';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';
 import { loadSchemaSync } from '@graphql-tools/load';
 import { addResolversToSchema } from '@graphql-tools/schema';
-import 'dotenv/config';
 import express from 'express';
 import { auth, AuthResult } from 'express-oauth2-jwt-bearer';
 import { createYoga } from 'graphql-yoga';

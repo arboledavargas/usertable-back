@@ -1,91 +1,137 @@
 enum FieldType {
-  TEXT
-  NUMBER
-  DATE
-  BOOLEAN
+    TEXT
+    NUMBER
+    DATE
+    BOOLEAN
+}
+
+enum OrderDirection {
+    ASC
+    DESC
+}
+
+enum PaginationDirection {
+    Forward
+    Backward
+}
+
+input CustomerOrder {
+    field: String! # Field to order by (could be a property field name)
+    direction: OrderDirection!
 }
 
 type Organization {
-  id: String!
-  name: String!
+    id: String!
+    name: String!
 }
 
 type CustomerFormField {
-  id: String!
-  fieldName: String!
-  type: FieldType!
+    id: String!
+    fieldName: String!
+    type: FieldType!
 }
 
-type CustomerFormFieldValue {
-  id: String!
-  customerId: String!
-  customerFormFieldId: String!
-  value: String!
+type CustomerProperty {
+    name: String!
+    value: String!
 }
 
 type Customer {
-  id: String!
-  properties: [CustomerFormFieldValue!]!
+    id: String!
+    properties: [CustomerProperty!]!
 }
 
-type Owner {
-  id: String!
-  name: String!
-  email: String!
-  organization: Organization!
+type User {
+    id: String!
+    name: String!
+    email: String!
+    organization: Organization!
 }
 
-input CustomerFiltersInput {
-  filters: [Filter!]!
+type CustomerEdge {
+    node: Customer!
+    cursor: String!
+}
+
+type CustomerConnection {
+    edges: [CustomerEdge!]!
+}
+
+input FormFieldValueInput {
+    customerFormFieldId: String!
+    value: String!
+}
+
+input CustomerInput {
+    properties: [FormFieldValueInput!]!
 }
 
 input Filter {
-  fieldId: String!
-  value: String!
+    fieldName: String!
+    value: String!
 }
 
 input CustomerFormFieldInput {
-  fieldName: String!
-  type: FieldType!
+    fieldName: String!
+    type: FieldType!
 }
 
 input OrganizationInput {
-  name: String!
-  userMail: String!
-  userName: String!
+    name: String!
+    userMail: String!
+    userName: String!
 }
 
 type CreateCustomerFormFieldPayload {
-  customerFormField: CustomerFormField
-  success: Boolean!
-  message: String
+    customerFormField: CustomerFormField
+    success: Boolean!
+    message: String
 }
 
 type CreateOrganizationPayload {
-  organization: Organization
-  success: Boolean!
-  message: String
+    organization: Organization
+    success: Boolean!
+    message: String
 }
 
 type DeleteCustomerPayload {
-  success: Boolean!
-  message: String
+    success: Boolean!
+    message: String
+}
+
+type CreateCustomerPayload {
+    customer: Customer
+    success: Boolean!
+    message: String
 }
 
 type Query {
-  filterCustomers(filter: CustomerFiltersInput!): [Customer!]!
-  searchCustomers(searchText: String!): [Customer!]!
-  getOrganizationCustomerFormFields(organizationId: String!): [CustomerFormField!]!
-  owner: Owner
+    filterCustomers(
+        filters: [Filter!]!
+        take: Int
+        cursor: String
+        direction: PaginationDirection
+        orderBy: CustomerOrder
+    ): CustomerConnection!
+    getCustomerById(id: String!):Customer!
+    searchCustomers(searchText: String!): [Customer!]!
+    getCustomerFormFields: [CustomerFormField!]!
+    user: User
 }
 
 type Mutation {
-  createCustomerFormField(input: CustomerFormFieldInput!): CreateCustomerFormFieldPayload!
-  deleteCustomer(userId: String!): DeleteCustomerPayload!
-  createOrganization(input: OrganizationInput!): CreateOrganizationPayload
+    createCustomerFormField(
+        input: CustomerFormFieldInput!
+    ): CreateCustomerFormFieldPayload!
+
+    deleteCustomer(userId: String!): DeleteCustomerPayload!
+
+    createOrganization(input: OrganizationInput!): CreateOrganizationPayload!
+
+    createCustomer(input: CustomerInput!): CreateCustomerPayload!
 }
 
 schema {
-  query: Query
-  mutation: Mutation
+    query: Query
+    mutation: Mutation
 }

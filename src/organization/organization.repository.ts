@@ -1,41 +1,39 @@
-import { PrismaClient } from '@prisma/client'
 import { Organization } from "./models/organization";
+import { Db, ObjectId } from "mongodb";
 
 export class OrganizationRepository {
-    constructor(private readonly prisma: PrismaClient) {
+  constructor(private db: Db) {}
 
+  private async update(organization: Organization): Promise<Organization> {
+    const result = await this.db
+      .collection("organizations")
+      .findOneAndUpdate(
+        { _id: new ObjectId(organization.id) },
+        { $set: { name: organization.name } },
+        { returnDocument: "after" },
+      );
+
+    if (!result) {
+      throw new Error("Update failed");
     }
 
-    private async update(organization: Organization):Promise<Organization> {
-        const result = await this.prisma.organization.update({
-            where: { id: organization.id },
-            data: { name: organization.name }
-        });
+    return organization;
+  }
 
-        return new Organization({
-            id: result.id,
-            name: result.name
-        });
+  private async create(organization: Organization): Promise<Organization> {
+    const result = await this.db.collection("organizations").insertOne({
+      name: organization.name,
+    });
+
+    organization.id = result.insertedId.toString();
+    return organization;
+  }
+
+  async save(organization: Organization): Promise<Organization> {
+    if (organization.id) {
+      return await this.update(organization);
+    } else {
+      return await this.create(organization);
     }
-
-    private async create(organization: Organization):Promise<Organization> {
-        const result = await this.prisma.organization.create({
-            data: {
-                name: organization.name
-            }
-        });
-
-        return new Organization({
-            id: result.id,
-            name: result.name
-        });
-    }
-
-    async save(organization: Organization): Promise<Organization> {
-        if(organization.id){
-            return await this.update(organization);
-        } else {
-            return await this.create(organization);
-        }
-    }
+  }
 }

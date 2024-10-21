@@ -1,14 +1,18 @@
-type props = {
-    id: string,
-    name: string
-}
+import { z } from "zod";
+
+export const OrganizationSchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+});
+
+type OrganizationType = z.infer<typeof OrganizationSchema>;
 
 export class Organization {
-    id: string;
-    name: string;
-    
-    constructor({id, name}: props){
-        this.id = id;
-        this.name = name;
-    }
+  id: string;
+  name: string;
+
+  constructor({ _id, name }: OrganizationType) {
+    this.id = _id;
+    this.name = name;
+  }
 }

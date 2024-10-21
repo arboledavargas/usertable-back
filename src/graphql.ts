@@ -23,6 +23,13 @@ export type CreateCustomerFormFieldPayload = {
   success: Scalars['Boolean']['output'];
 };
 
+export type CreateCustomerPayload = {
+  __typename?: 'CreateCustomerPayload';
+  customer?: Maybe<Customer>;
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type CreateOrganizationPayload = {
   __typename?: 'CreateOrganizationPayload';
   message?: Maybe<Scalars['String']['output']>;
@@ -33,11 +40,18 @@ export type CreateOrganizationPayload = {
 export type Customer = {
   __typename?: 'Customer';
   id: Scalars['String']['output'];
-  properties: Array<CustomerFormFieldValue>;
+  properties: Array<CustomerProperty>;
 };
 
-export type CustomerFiltersInput = {
-  filters: Array<Filter>;
+export type CustomerConnection = {
+  __typename?: 'CustomerConnection';
+  edges: Array<CustomerEdge>;
+};
+
+export type CustomerEdge = {
+  __typename?: 'CustomerEdge';
+  cursor: Scalars['String']['output'];
+  node: Customer;
 };
 
 export type CustomerFormField = {
@@ -52,11 +66,18 @@ export type CustomerFormFieldInput = {
   type: FieldType;
 };
 
-export type CustomerFormFieldValue = {
-  __typename?: 'CustomerFormFieldValue';
-  customerFormFieldId: Scalars['String']['output'];
-  customerId: Scalars['String']['output'];
-  id: Scalars['String']['output'];
+export type CustomerInput = {
+  properties: Array<FormFieldValueInput>;
+};
+
+export type CustomerOrder = {
+  direction: OrderDirection;
+  field: Scalars['String']['input'];
+};
+
+export type CustomerProperty = {
+  __typename?: 'CustomerProperty';
+  name: Scalars['String']['output'];
   value: Scalars['String']['output'];
 };
 
@@ -74,15 +95,26 @@ export enum FieldType {
 }
 
 export type Filter = {
-  fieldId: Scalars['String']['input'];
+  fieldName: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
+export type FormFieldValueInput = {
+  customerFormFieldId: Scalars['String']['input'];
   value: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createCustomer: CreateCustomerPayload;
   createCustomerFormField: CreateCustomerFormFieldPayload;
-  createOrganization?: Maybe<CreateOrganizationPayload>;
+  createOrganization: CreateOrganizationPayload;
   deleteCustomer: DeleteCustomerPayload;
+};
+
+
+export type MutationCreateCustomerArgs = {
+  input: CustomerInput;
 };
 
 
@@ -100,6 +132,11 @@ export type MutationDeleteCustomerArgs = {
   userId: Scalars['String']['input'];
 };
 
+export enum OrderDirection {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
 export type Organization = {
   __typename?: 'Organization';
   id: Scalars['String']['output'];
@@ -112,35 +149,45 @@ export type OrganizationInput = {
   userName: Scalars['String']['input'];
 };
 
-export type Owner = {
-  __typename?: 'Owner';
-  email: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  organization: Organization;
-};
+export enum PaginationDirection {
+  Backward = 'Backward',
+  Forward = 'Forward'
+}
 
 export type Query = {
   __typename?: 'Query';
-  filterCustomers: Array<Customer>;
-  getOrganizationCustomerFormFields: Array<CustomerFormField>;
-  owner?: Maybe<Owner>;
+  filterCustomers: CustomerConnection;
+  getCustomerById: Customer;
+  getCustomerFormFields: Array<CustomerFormField>;
   searchCustomers: Array<Customer>;
+  user?: Maybe<User>;
 };
 
 
 export type QueryFilterCustomersArgs = {
-  filter: CustomerFiltersInput;
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  direction?: InputMaybe<PaginationDirection>;
+  filters: Array<Filter>;
+  orderBy?: InputMaybe<CustomerOrder>;
+  take?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
-export type QueryGetOrganizationCustomerFormFieldsArgs = {
-  organizationId: Scalars['String']['input'];
+export type QueryGetCustomerByIdArgs = {
+  id: Scalars['String']['input'];
 };
 
 
 export type QuerySearchCustomersArgs = {
   searchText: Scalars['String']['input'];
+};
+
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  organization: Organization;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -217,45 +264,66 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateCustomerFormFieldPayload: ResolverTypeWrapper<CreateCustomerFormFieldPayload>;
+  CreateCustomerPayload: ResolverTypeWrapper<CreateCustomerPayload>;
   CreateOrganizationPayload: ResolverTypeWrapper<CreateOrganizationPayload>;
   Customer: ResolverTypeWrapper<Customer>;
-  CustomerFiltersInput: CustomerFiltersInput;
+  CustomerConnection: ResolverTypeWrapper<CustomerConnection>;
+  CustomerEdge: ResolverTypeWrapper<CustomerEdge>;
   CustomerFormField: ResolverTypeWrapper<CustomerFormField>;
   CustomerFormFieldInput: CustomerFormFieldInput;
-  CustomerFormFieldValue: ResolverTypeWrapper<CustomerFormFieldValue>;
+  CustomerInput: CustomerInput;
+  CustomerOrder: CustomerOrder;
+  CustomerProperty: ResolverTypeWrapper<CustomerProperty>;
   DeleteCustomerPayload: ResolverTypeWrapper<DeleteCustomerPayload>;
   FieldType: FieldType;
   Filter: Filter;
+  FormFieldValueInput: FormFieldValueInput;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
+  OrderDirection: OrderDirection;
   Organization: ResolverTypeWrapper<Organization>;
   OrganizationInput: OrganizationInput;
-  Owner: ResolverTypeWrapper<Owner>;
+  PaginationDirection: PaginationDirection;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  User: ResolverTypeWrapper<User>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
   CreateCustomerFormFieldPayload: CreateCustomerFormFieldPayload;
+  CreateCustomerPayload: CreateCustomerPayload;
   CreateOrganizationPayload: CreateOrganizationPayload;
   Customer: Customer;
-  CustomerFiltersInput: CustomerFiltersInput;
+  CustomerConnection: CustomerConnection;
+  CustomerEdge: CustomerEdge;
   CustomerFormField: CustomerFormField;
   CustomerFormFieldInput: CustomerFormFieldInput;
-  CustomerFormFieldValue: CustomerFormFieldValue;
+  CustomerInput: CustomerInput;
+  CustomerOrder: CustomerOrder;
+  CustomerProperty: CustomerProperty;
   DeleteCustomerPayload: DeleteCustomerPayload;
   Filter: Filter;
+  FormFieldValueInput: FormFieldValueInput;
+  Int: Scalars['Int']['output'];
   Mutation: {};
   Organization: Organization;
   OrganizationInput: OrganizationInput;
-  Owner: Owner;
   Query: {};
   String: Scalars['String']['output'];
+  User: User;
 }>;
 
 export type CreateCustomerFormFieldPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateCustomerFormFieldPayload'] = ResolversParentTypes['CreateCustomerFormFieldPayload']> = ResolversObject<{
   customerFormField?: Resolver<Maybe<ResolversTypes['CustomerFormField']>, ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CreateCustomerPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateCustomerPayload'] = ResolversParentTypes['CreateCustomerPayload']> = ResolversObject<{
+  customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -270,7 +338,18 @@ export type CreateOrganizationPayloadResolvers<ContextType = any, ParentType ext
 
 export type CustomerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Customer'] = ResolversParentTypes['Customer']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  properties?: Resolver<Array<ResolversTypes['CustomerFormFieldValue']>, ParentType, ContextType>;
+  properties?: Resolver<Array<ResolversTypes['CustomerProperty']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CustomerConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerConnection'] = ResolversParentTypes['CustomerConnection']> = ResolversObject<{
+  edges?: Resolver<Array<ResolversTypes['CustomerEdge']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CustomerEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerEdge'] = ResolversParentTypes['CustomerEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Customer'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -281,10 +360,8 @@ export type CustomerFormFieldResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type CustomerFormFieldValueResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerFormFieldValue'] = ResolversParentTypes['CustomerFormFieldValue']> = ResolversObject<{
-  customerFormFieldId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  customerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type CustomerPropertyResolvers<ContextType = any, ParentType extends ResolversParentTypes['CustomerProperty'] = ResolversParentTypes['CustomerProperty']> = ResolversObject<{
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -296,8 +373,9 @@ export type DeleteCustomerPayloadResolvers<ContextType = any, ParentType extends
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createCustomer?: Resolver<ResolversTypes['CreateCustomerPayload'], ParentType, ContextType, RequireFields<MutationCreateCustomerArgs, 'input'>>;
   createCustomerFormField?: Resolver<ResolversTypes['CreateCustomerFormFieldPayload'], ParentType, ContextType, RequireFields<MutationCreateCustomerFormFieldArgs, 'input'>>;
-  createOrganization?: Resolver<Maybe<ResolversTypes['CreateOrganizationPayload']>, ParentType, ContextType, RequireFields<MutationCreateOrganizationArgs, 'input'>>;
+  createOrganization?: Resolver<ResolversTypes['CreateOrganizationPayload'], ParentType, ContextType, RequireFields<MutationCreateOrganizationArgs, 'input'>>;
   deleteCustomer?: Resolver<ResolversTypes['DeleteCustomerPayload'], ParentType, ContextType, RequireFields<MutationDeleteCustomerArgs, 'userId'>>;
 }>;
 
@@ -307,7 +385,15 @@ export type OrganizationResolvers<ContextType = any, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type OwnerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Owner'] = ResolversParentTypes['Owner']> = ResolversObject<{
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  filterCustomers?: Resolver<ResolversTypes['CustomerConnection'], ParentType, ContextType, RequireFields<QueryFilterCustomersArgs, 'filters'>>;
+  getCustomerById?: Resolver<ResolversTypes['Customer'], ParentType, ContextType, RequireFields<QueryGetCustomerByIdArgs, 'id'>>;
+  getCustomerFormFields?: Resolver<Array<ResolversTypes['CustomerFormField']>, ParentType, ContextType>;
+  searchCustomers?: Resolver<Array<ResolversTypes['Customer']>, ParentType, ContextType, RequireFields<QuerySearchCustomersArgs, 'searchText'>>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+}>;
+
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -315,23 +401,19 @@ export type OwnerResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  filterCustomers?: Resolver<Array<ResolversTypes['Customer']>, ParentType, ContextType, RequireFields<QueryFilterCustomersArgs, 'filter'>>;
-  getOrganizationCustomerFormFields?: Resolver<Array<ResolversTypes['CustomerFormField']>, ParentType, ContextType, RequireFields<QueryGetOrganizationCustomerFormFieldsArgs, 'organizationId'>>;
-  owner?: Resolver<Maybe<ResolversTypes['Owner']>, ParentType, ContextType>;
-  searchCustomers?: Resolver<Array<ResolversTypes['Customer']>, ParentType, ContextType, RequireFields<QuerySearchCustomersArgs, 'searchText'>>;
-}>;
-
 export type Resolvers<ContextType = any> = ResolversObject<{
   CreateCustomerFormFieldPayload?: CreateCustomerFormFieldPayloadResolvers<ContextType>;
+  CreateCustomerPayload?: CreateCustomerPayloadResolvers<ContextType>;
   CreateOrganizationPayload?: CreateOrganizationPayloadResolvers<ContextType>;
   Customer?: CustomerResolvers<ContextType>;
+  CustomerConnection?: CustomerConnectionResolvers<ContextType>;
+  CustomerEdge?: CustomerEdgeResolvers<ContextType>;
   CustomerFormField?: CustomerFormFieldResolvers<ContextType>;
-  CustomerFormFieldValue?: CustomerFormFieldValueResolvers<ContextType>;
+  CustomerProperty?: CustomerPropertyResolvers<ContextType>;
   DeleteCustomerPayload?: DeleteCustomerPayloadResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Organization?: OrganizationResolvers<ContextType>;
-  Owner?: OwnerResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 }>;
 

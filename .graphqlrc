@@ -1,0 +1,14 @@
+{
+  "schema": "./schema.graphql",
+  "documents": "./src/**/*.graphql", 
+  "extensions": {
+    "endpoints": {
+      "default": {
+        "url": "http://localhost:3000/graphql",
+        "headers": {
+          "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IldHY3hJQ1pPUEMtNEJubEthV1V0RiJ9.eyJpc3MiOiJodHRwczovL2Rldi1kY3IxdGZsa3duaWpscHY3LnVzLmF1dGgwLmNvbS8iLCJzdWIiOiI0MzNSdlU2MEhMeEZaQWRrRmxwS0t0WWVaRE5xdWV6b0BjbGllbnRzIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDozMDAwIiwiaWF0IjoxNzI4MDM4Mjk0LCJleHAiOjE3MjgxMjQ2OTQsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IjQzM1J2VTYwSEx4RlpBZGtGbHBLS3RZZVpETnF1ZXpvIn0.UA9hyYIbx6qaah9Ox8n-3jLQIqcWjPBGSrikxm0IkjdI3VLCNLbL7imUZBKQr3cs0O2wsriRha8TjlQ77uTv2_ESOGC-GEkcLbrhQdnbaBsy5M7iWt-_zJtWeKQzfNkjtvHl8E5Lsu525JUh-JbWDsY3ZMNtA8XviP2J1Ln7ZjTHGSHVCUjRjIiEKsIMkIN6ajeIrw1w6YNWcAkN701-_xMD_yVTFXgJTF9PxvobVroJ27NoGzeYYxZZn6T88KhMpk_DJ-CkBgt023OdYWxdmpSUHv5vuCuHZxTGPgBhEVP3KR_-PTSWugKMmCt6fbboj03yfu9aFTAEVqbMzslkkA"
+        }
+      }
+    }
+  }
+}

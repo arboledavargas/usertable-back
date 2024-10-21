@@ -17,30 +17,34 @@ enum FieldType {
   BOOLEAN
 }
 
-model UserFormField {
-  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
-  fieldName          String
-  type               FieldType
-  organizationid     String               @db.ObjectId
-  organization       Organization         @relation(fields: [organizationid], references: [id])
-  UserFormFieldValue UserFormFieldValue[]
+model CustomerFormField {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  fieldName      String
+  type           FieldType
+  organizationid String       @db.ObjectId
+  organization   Organization @relation(fields: [organizationid], references: [id])
 }
 
-model UserFormFieldValue {
-  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+model Customer {
+  id           String               @id @default(auto()) @map("_id") @db.ObjectId
+  createDate   DateTime
+  properties   CustomerProperty[]
+  organization CustomerOrganization
+}
+
+type CustomerProperty {
   value           String
-  userFormFieldId String        @db.ObjectId
-  userFormField   UserFormField @relation(fields: [userFormFieldId], references: [id])
-  userId          String        @db.ObjectId
-  user            User          @relation(fields: [userId], references: [id])
+  type            FieldType
+  userFormFieldId String    @db.ObjectId
+  Name            String
+}
+
+type CustomerOrganization {
+  id   String
+  name String
 }
 
 model User {
-  id                 String               @id @default(auto()) @map("_id") @db.ObjectId
-  UserFormFieldValue UserFormFieldValue[]
-}
-
-model Owner {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
   authId         String       @unique
   name           String
@@ -50,9 +54,8 @@ model Owner {
 }
 
 model Organization {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-
-  Owner         Owner[]
-  UserFormField UserFormField[]
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  user              User[]
+  CustomerFormField CustomerFormField[]
 }
