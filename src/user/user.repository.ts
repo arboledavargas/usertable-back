@@ -1,5 +1,5 @@
 import { Db, ObjectId } from "mongodb";
-import { User, UserSchema } from "./models/user";
+import { User, UserSchema } from "./models/user.ts";
 
 export class UserRepository {
   constructor(private db: Db) {}

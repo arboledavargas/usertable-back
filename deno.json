@@ -1,0 +1,33 @@
+{
+  "tasks": {
+    "dev": "deno -A --watch --inspect ./src/main.ts",
+    "debug": "tsc --noEmit && tsx --inspect ./src/main.ts",
+    "db:start-mongo": "docker run --name mongodb-container -d -p 27017:27017 -v mongo-data:/data/db -e MONGO_INITDB_ROOT_USERNAME=myuser -e MONGO_INITDB_ROOT_PASSWORD=mypass mongo:latest",
+    "generate:graphql": "deno -A codegen.ts"
+  },
+  "imports": {
+    "@es-toolkit/es-toolkit": "jsr:@es-toolkit/es-toolkit@^1.25.2",
+    "@graphql-codegen/cli": "npm:@graphql-codegen/cli@5.0.2",
+    "@graphql-codegen/core": "npm:@graphql-codegen/core@4.0.2",
+    "@graphql-codegen/typescript": "npm:@graphql-codegen/typescript@4.0.9",
+    "@graphql-codegen/typescript-resolvers": "npm:@graphql-codegen/typescript-resolvers@4.2.1",
+    "@graphql-tools/graphql-file-loader": "npm:@graphql-tools/graphql-file-loader@8.0.2",
+    "@graphql-tools/load": "npm:@graphql-tools/load@8.0.2",
+    "@graphql-tools/schema": "npm:@graphql-tools/schema@10.0.6",
+    "@std/fs": "jsr:@std/fs@^1.0.4",
+    "@std/path": "jsr:@std/path@^1.0.6",
+    "@types/express": "npm:@types/express@5.0.0",
+    "cors": "npm:cors@2.8.5",
+    "dotenv": "npm:dotenv@16.4.5",
+    "express": "npm:express@5.0.0",
+    "express-oauth2-jwt-bearer": "npm:express-oauth2-jwt-bearer@1.6.0",
+    "graphql": "npm:graphql@16.9.0",
+    "graphql-yoga": "npm:graphql-yoga@5.7.0",
+    "helmet": "npm:helmet@8.0.0",
+    "lodash": "npm:lodash@4.17.21",
+    "luxon": "npm:luxon@3.5.0",
+    "mongodb": "npm:mongodb@6.9.0",
+    "typescript": "npm:typescript@5.6.2",
+    "zod": "npm:zod@3.23.8"
+  }
+}

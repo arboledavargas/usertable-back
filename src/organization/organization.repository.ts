@@ -1,4 +1,4 @@
-import { Organization } from "./models/organization";
+import { Organization } from "./models/organization.ts";
 import { Db, ObjectId } from "mongodb";
 
 export class OrganizationRepository {

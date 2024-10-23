@@ -1,7 +1,7 @@
 import {
   customerFormField,
   customerFormFieldSchema,
-} from "./models/customer-form-field";
+} from "./models/customer-form-field.ts";
 import { Db, ObjectId } from "mongodb";
 
 export class CustomerFormFieldRepository {

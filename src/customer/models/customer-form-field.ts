@@ -1,5 +1,5 @@
-import { Model } from "../../common/primitives";
-import { FieldType, CustomerFormField } from "../../graphql";
+import { Model } from "../../common/primitives.ts";
+import { FieldType, CustomerFormField } from "../../graphql.ts";
 import { z } from "zod";
 
 export const customerFormFieldSchema = z.object({

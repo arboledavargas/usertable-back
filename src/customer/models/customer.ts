@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Customer as gqlCustomer } from "../../graphql";
+import { Customer as gqlCustomer } from "../../graphql.ts";
 
 function serializeValue(value: any): string {
   if (typeof value === "string") {

@@ -1,6 +1,6 @@
 import { Db, ObjectId } from "mongodb";
-import { Customer, CustomerSchema } from "./models/customer";
-import { PaginationDirection, OrderDirection } from "../graphql";
+import { Customer, CustomerSchema } from "./models/customer.ts";
+import { PaginationDirection, OrderDirection } from "../graphql.ts";
 
 export type filter = {
    fieldName: string;

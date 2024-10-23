@@ -1,4 +1,4 @@
-import { UserRepository } from "./user.repository";
+import { UserRepository } from "./user.repository.ts";
 
 export class OwnerService {
   constructor(private ownerRepository: UserRepository) {}

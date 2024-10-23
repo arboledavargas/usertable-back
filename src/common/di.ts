@@ -1,11 +1,11 @@
-import { CustomerFormFieldRepository } from "../customer/customer-form-field.repository";
-import { CustomerService } from "../customer/customer.service";
-import { UserRepository } from "../user/user.repository";
-import { OwnerService } from "../user/user.service";
-import { mongoClient } from "./db/mongodb";
-import { OrganizationService } from "../organization/organization.service";
-import { OrganizationRepository } from "../organization/organization.repository";
-import { CustomerRepository } from "../customer/customer.repository";
+import { CustomerFormFieldRepository } from "../customer/customer-form-field.repository.ts";
+import { CustomerService } from "../customer/customer.service.ts";
+import { UserRepository } from "../user/user.repository.ts";
+import { OwnerService } from "../user/user.service.ts";
+import { mongoClient } from "./db/mongodb.ts";
+import { OrganizationService } from "../organization/organization.service.ts";
+import { OrganizationRepository } from "../organization/organization.repository.ts";
+import { CustomerRepository } from "../customer/customer.repository.ts";
 
 const db = mongoClient.db("user-table");
 

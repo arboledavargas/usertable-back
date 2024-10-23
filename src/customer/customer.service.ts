@@ -11,14 +11,13 @@ import {
   QueryFilterCustomersArgs,
   PaginationDirection,
   Customer as gqlCustomer
-} from "../graphql";
-import { UserRepository } from "../user/user.repository";
-import { CustomerFormFieldRepository } from "./customer-form-field.repository";
-import { CustomerRepository } from "./customer.repository";
-import { Customer } from "./models/customer";
-import { customerFormField } from "./models/customer-form-field";
-import { fromPairs } from 'lodash';
-
+} from "../graphql.ts";
+import { UserRepository } from "../user/user.repository.ts";
+import { CustomerFormFieldRepository } from "./customer-form-field.repository.ts";
+import { CustomerRepository } from "./customer.repository.ts";
+import { Customer } from "./models/customer.ts";
+import { customerFormField } from "./models/customer-form-field.ts";
+import { fromPairs } from '@es-toolkit/es-toolkit/compat';
 
 export class CustomerService {
 

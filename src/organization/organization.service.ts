@@ -1,8 +1,8 @@
-import { OrganizationRepository } from "./organization.repository";
-import { Organization } from "./models/organization";
-import { OrganizationInput, CreateOrganizationPayload } from "../graphql";
-import { UserRepository } from "../user/user.repository";
-import { User } from "../user/models/user";
+import { OrganizationRepository } from "./organization.repository.ts";
+import { Organization } from "./models/organization.ts";
+import { OrganizationInput, CreateOrganizationPayload } from "../graphql.ts";
+import { UserRepository } from "../user/user.repository.ts";
+import { User } from "../user/models/user.ts";
 
 export class OrganizationService {
   constructor(

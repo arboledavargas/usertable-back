@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.DATABASE_URL || '';
+const uri = Deno.env.get('DATABASE_URL') || '';
 
 const createMongoClient = () => {
     return new MongoClient(uri);

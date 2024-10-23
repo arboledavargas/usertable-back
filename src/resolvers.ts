@@ -1,9 +1,9 @@
-import { Resolvers } from "./graphql";
+import { Resolvers } from "./graphql.ts";
 import {
   customerService,
   ownerService,
   organizationService,
-} from "./common/di";
+} from "./common/di.ts";
 import { YogaInitialContext } from "graphql-yoga";
 
 export interface GraphQlContext extends YogaInitialContext {
