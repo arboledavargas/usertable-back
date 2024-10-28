@@ -71,7 +71,7 @@ export class CustomerRepository {
       take: number;
       paginationDirection: PaginationDirection;
       cursor: {
-         value: any;
+         value: string;
          field: string;
       };
       order: OrderDirection;

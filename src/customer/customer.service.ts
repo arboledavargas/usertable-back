@@ -1,3 +1,4 @@
+// @ts-types="npm:@types/luxon"
 import { DateTime } from "luxon";
 import {
   CreateCustomerFormFieldPayload,
@@ -18,6 +19,7 @@ import { CustomerRepository } from "./customer.repository.ts";
 import { Customer } from "./models/customer.ts";
 import { customerFormField } from "./models/customer-form-field.ts";
 import { fromPairs } from '@es-toolkit/es-toolkit/compat';
+import { decodeBase64, encodeBase64 } from '@std/encoding/base64'
 
 export class CustomerService {
 
@@ -39,11 +41,11 @@ export class CustomerService {
     const cursorStringValue =
       fieldValue instanceof Date ? fieldValue.toISOString() : fieldValue;
 
-    return Buffer.from(cursorStringValue).toString("base64");
+    return encodeBase64(cursorStringValue);
   };
 
   private decodeCursor = (cursor: string): string => {
-    return Buffer.from(cursor, "base64").toString("utf8");
+    return new TextDecoder().decode(decodeBase64(cursor));
   };
 
   async createCustomerFormField(
@@ -154,7 +156,7 @@ export class CustomerService {
     const page = await this.customerRepository.filterCustomers({
       cursor: {
         field: orderBy?.field ?? "createDate",
-        value: decodedCursor ?? DateTime.now().toUTC().toJSDate(),
+        value: decodedCursor ?? DateTime.now().toUTC().toJSDate().toISOString(),
       },
       filters: filters,
       order: orderBy ? orderBy.direction : OrderDirection.Desc,
