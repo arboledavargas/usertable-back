@@ -28,16 +28,21 @@ export const CustomerSchema = z.object({
 type CustomerType = z.infer<typeof CustomerSchema>;
 
 export class Customer {
+
   id: string;
   organization: { id: string; name: string };
   createDate: Date;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
 
   constructor(props: CustomerType) {
     this.id = props._id;
     this.organization = props.organization;
     this.createDate = props.createDate;
     this.properties = props.properties;
+  }
+
+  update(properties: Record<string, unknown>) {
+    this.properties = properties
   }
 
   serialize(): gqlCustomer {

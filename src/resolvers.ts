@@ -10,7 +10,7 @@ export interface GraphQlContext extends YogaInitialContext {
   userId: string;
 }
 
-export var resolvers: Resolvers<GraphQlContext> = {
+export const resolvers: Resolvers<GraphQlContext> = {
   Query: {
     user: async (_, __, { userId }) => {
       return await ownerService.getOwnerById(userId);
@@ -39,5 +39,8 @@ export var resolvers: Resolvers<GraphQlContext> = {
     createCustomer: async (_, { input }, { userId }) => {
       return await customerService.createCustomer(input, userId);
     },
+    updateCustomer: async (_, { input, id }, { userId }) => {
+      return await customerService.updateCustomer(id, input, userId)
+    }
   },
 };

@@ -1,8 +1,6 @@
 import { codegen } from "@graphql-codegen/core";
-import { GraphQLSchema, buildSchema, printSchema, parse } from "graphql";
 import * as typescriptPlugin from "@graphql-codegen/typescript";
 import * as typescriptResolversPlugin from "@graphql-codegen/typescript-resolvers";
-import { typeDefs } from "./schema.ts";
 import { join } from "@std/path";
 import { loadSchemaSync } from '@graphql-tools/load';
 import { GraphQLFileLoader } from '@graphql-tools/graphql-file-loader';

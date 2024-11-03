@@ -82,6 +82,11 @@ export type CustomerConnection = {
   edges: Array<CustomerEdge>;
 };
 
+export type CustomerPropertyInput = {
+  name: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
 export type FormFieldValueInput = {
   customerFormFieldId: Scalars['String']['input'];
   value: Scalars['String']['input'];
@@ -89,6 +94,10 @@ export type FormFieldValueInput = {
 
 export type CustomerInput = {
   properties: Array<FormFieldValueInput>;
+};
+
+export type UpdateCustomerInput = {
+  properties: Array<CustomerPropertyInput>;
 };
 
 export type Filter = {
@@ -105,6 +114,13 @@ export type OrganizationInput = {
   name: Scalars['String']['input'];
   userMail: Scalars['String']['input'];
   userName: Scalars['String']['input'];
+};
+
+export type UpdateCustomerPayload = {
+  __typename?: 'UpdateCustomerPayload';
+  customer?: Maybe<Customer>;
+  success: Scalars['Boolean']['output'];
+  message?: Maybe<Scalars['String']['output']>;
 };
 
 export type CreateCustomerFormFieldPayload = {
@@ -168,6 +184,7 @@ export type Mutation = {
   deleteCustomer: DeleteCustomerPayload;
   createOrganization: CreateOrganizationPayload;
   createCustomer: CreateCustomerPayload;
+  updateCustomer: UpdateCustomerPayload;
 };
 
 
@@ -188,6 +205,12 @@ export type MutationCreateOrganizationArgs = {
 
 export type MutationCreateCustomerArgs = {
   input: CustomerInput;
+};
+
+
+export type MutationUpdateCustomerArgs = {
+  id: Scalars['String']['input'];
+  input: UpdateCustomerInput;
 };
 
 
@@ -273,13 +296,16 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   CustomerEdge: ResolverTypeWrapper<CustomerEdge>;
   CustomerConnection: ResolverTypeWrapper<CustomerConnection>;
+  CustomerPropertyInput: CustomerPropertyInput;
   FormFieldValueInput: FormFieldValueInput;
   CustomerInput: CustomerInput;
+  UpdateCustomerInput: UpdateCustomerInput;
   Filter: Filter;
   CustomerFormFieldInput: CustomerFormFieldInput;
   OrganizationInput: OrganizationInput;
-  CreateCustomerFormFieldPayload: ResolverTypeWrapper<CreateCustomerFormFieldPayload>;
+  UpdateCustomerPayload: ResolverTypeWrapper<UpdateCustomerPayload>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateCustomerFormFieldPayload: ResolverTypeWrapper<CreateCustomerFormFieldPayload>;
   CreateOrganizationPayload: ResolverTypeWrapper<CreateOrganizationPayload>;
   DeleteCustomerPayload: ResolverTypeWrapper<DeleteCustomerPayload>;
   CreateCustomerPayload: ResolverTypeWrapper<CreateCustomerPayload>;
@@ -299,13 +325,16 @@ export type ResolversParentTypes = {
   User: User;
   CustomerEdge: CustomerEdge;
   CustomerConnection: CustomerConnection;
+  CustomerPropertyInput: CustomerPropertyInput;
   FormFieldValueInput: FormFieldValueInput;
   CustomerInput: CustomerInput;
+  UpdateCustomerInput: UpdateCustomerInput;
   Filter: Filter;
   CustomerFormFieldInput: CustomerFormFieldInput;
   OrganizationInput: OrganizationInput;
-  CreateCustomerFormFieldPayload: CreateCustomerFormFieldPayload;
+  UpdateCustomerPayload: UpdateCustomerPayload;
   Boolean: Scalars['Boolean']['output'];
+  CreateCustomerFormFieldPayload: CreateCustomerFormFieldPayload;
   CreateOrganizationPayload: CreateOrganizationPayload;
   DeleteCustomerPayload: DeleteCustomerPayload;
   CreateCustomerPayload: CreateCustomerPayload;
@@ -358,6 +387,13 @@ export type CustomerConnectionResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateCustomerPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateCustomerPayload'] = ResolversParentTypes['UpdateCustomerPayload']> = {
+  customer?: Resolver<Maybe<ResolversTypes['Customer']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateCustomerFormFieldPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateCustomerFormFieldPayload'] = ResolversParentTypes['CreateCustomerFormFieldPayload']> = {
   customerFormField?: Resolver<Maybe<ResolversTypes['CustomerFormField']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -398,6 +434,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteCustomer?: Resolver<ResolversTypes['DeleteCustomerPayload'], ParentType, ContextType, RequireFields<MutationDeleteCustomerArgs, 'userId'>>;
   createOrganization?: Resolver<ResolversTypes['CreateOrganizationPayload'], ParentType, ContextType, RequireFields<MutationCreateOrganizationArgs, 'input'>>;
   createCustomer?: Resolver<ResolversTypes['CreateCustomerPayload'], ParentType, ContextType, RequireFields<MutationCreateCustomerArgs, 'input'>>;
+  updateCustomer?: Resolver<ResolversTypes['UpdateCustomerPayload'], ParentType, ContextType, RequireFields<MutationUpdateCustomerArgs, 'id' | 'input'>>;
 };
 
 export type Resolvers<ContextType = any> = {
@@ -408,6 +445,7 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
   CustomerEdge?: CustomerEdgeResolvers<ContextType>;
   CustomerConnection?: CustomerConnectionResolvers<ContextType>;
+  UpdateCustomerPayload?: UpdateCustomerPayloadResolvers<ContextType>;
   CreateCustomerFormFieldPayload?: CreateCustomerFormFieldPayloadResolvers<ContextType>;
   CreateOrganizationPayload?: CreateOrganizationPayloadResolvers<ContextType>;
   DeleteCustomerPayload?: DeleteCustomerPayloadResolvers<ContextType>;

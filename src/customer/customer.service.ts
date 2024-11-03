@@ -20,8 +20,10 @@ import { Customer } from "./models/customer.ts";
 import { customerFormField } from "./models/customer-form-field.ts";
 import { fromPairs } from '@es-toolkit/es-toolkit/compat';
 import { decodeBase64, encodeBase64 } from '@std/encoding/base64'
+import { UpdateCustomerPayload, UpdateCustomerInput } from "../graphql.ts";
 
 export class CustomerService {
+
 
   constructor(
     private readonly customerFormFieldRepository: CustomerFormFieldRepository,
@@ -185,5 +187,24 @@ export class CustomerService {
      }
 
      return customer.serialize();
+  }
+
+  async updateCustomer(customerId:string, input: UpdateCustomerInput, uuid:string): Promise<UpdateCustomerPayload> {
+    const customer = await this.customerRepository.findCustomerById(customerId);
+
+    if(!customer) {
+      throw new Error("Customer not found");
+    }
+
+    const properties = Object.fromEntries(input.properties.map(({name, value}) => [name, value]));
+
+    customer.update(properties)
+
+    await this.customerRepository.save(customer);
+
+    return {
+      success: true,
+      customer: customer.serialize(),
+    }
   }
 }

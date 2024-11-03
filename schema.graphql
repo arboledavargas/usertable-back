@@ -57,6 +57,11 @@ type CustomerConnection {
     edges: [CustomerEdge!]!
 }
 
+input CustomerPropertyInput {
+    name: String!
+    value: String!
+}
+
 input FormFieldValueInput {
     customerFormFieldId: String!
     value: String!
@@ -64,6 +69,10 @@ input FormFieldValueInput {
 
 input CustomerInput {
     properties: [FormFieldValueInput!]!
+}
+
+input UpdateCustomerInput {
+    properties: [CustomerPropertyInput!]!
 }
 
 input Filter {
@@ -80,6 +89,12 @@ input OrganizationInput {
     name: String!
     userMail: String!
     userName: String!
+}
+
+type UpdateCustomerPayload {
+    customer: Customer
+    success: Boolean!
+    message: String
 }
 
 type CreateCustomerFormFieldPayload {
@@ -129,6 +144,8 @@ type Mutation {
     createOrganization(input: OrganizationInput!): CreateOrganizationPayload!
 
     createCustomer(input: CustomerInput!): CreateCustomerPayload!
+    
+    updateCustomer(id: String!, input: UpdateCustomerInput!): UpdateCustomerPayload!
 }
 
 schema {
