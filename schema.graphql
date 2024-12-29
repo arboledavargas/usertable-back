@@ -128,7 +128,7 @@ type Query {
         direction: PaginationDirection
         orderBy: CustomerOrder
     ): CustomerConnection!
-    getCustomerById(id: String!):Customer!
+    getCustomerById(id: String!): Customer!
     searchCustomers(searchText: String!): [Customer!]!
     getCustomerFormFields: [CustomerFormField!]!
     user: User
@@ -139,13 +139,16 @@ type Mutation {
         input: CustomerFormFieldInput!
     ): CreateCustomerFormFieldPayload!
 
-    deleteCustomer(userId: String!): DeleteCustomerPayload!
+    deleteCustomers(userIds: [String!]!): DeleteCustomerPayload!
 
     createOrganization(input: OrganizationInput!): CreateOrganizationPayload!
 
     createCustomer(input: CustomerInput!): CreateCustomerPayload!
-    
-    updateCustomer(id: String!, input: UpdateCustomerInput!): UpdateCustomerPayload!
+
+    updateCustomer(
+        id: String!
+        input: UpdateCustomerInput!
+    ): UpdateCustomerPayload!
 }
 
 schema {

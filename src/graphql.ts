@@ -181,7 +181,7 @@ export type QuerySearchCustomersArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   createCustomerFormField: CreateCustomerFormFieldPayload;
-  deleteCustomer: DeleteCustomerPayload;
+  deleteCustomers: DeleteCustomerPayload;
   createOrganization: CreateOrganizationPayload;
   createCustomer: CreateCustomerPayload;
   updateCustomer: UpdateCustomerPayload;
@@ -193,8 +193,8 @@ export type MutationCreateCustomerFormFieldArgs = {
 };
 
 
-export type MutationDeleteCustomerArgs = {
-  userId: Scalars['String']['input'];
+export type MutationDeleteCustomersArgs = {
+  userIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -431,7 +431,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createCustomerFormField?: Resolver<ResolversTypes['CreateCustomerFormFieldPayload'], ParentType, ContextType, RequireFields<MutationCreateCustomerFormFieldArgs, 'input'>>;
-  deleteCustomer?: Resolver<ResolversTypes['DeleteCustomerPayload'], ParentType, ContextType, RequireFields<MutationDeleteCustomerArgs, 'userId'>>;
+  deleteCustomers?: Resolver<ResolversTypes['DeleteCustomerPayload'], ParentType, ContextType, RequireFields<MutationDeleteCustomersArgs, 'userIds'>>;
   createOrganization?: Resolver<ResolversTypes['CreateOrganizationPayload'], ParentType, ContextType, RequireFields<MutationCreateOrganizationArgs, 'input'>>;
   createCustomer?: Resolver<ResolversTypes['CreateCustomerPayload'], ParentType, ContextType, RequireFields<MutationCreateCustomerArgs, 'input'>>;
   updateCustomer?: Resolver<ResolversTypes['UpdateCustomerPayload'], ParentType, ContextType, RequireFields<MutationUpdateCustomerArgs, 'id' | 'input'>>;

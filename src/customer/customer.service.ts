@@ -3,45 +3,57 @@ import { DateTime } from "luxon";
 import {
   CreateCustomerFormFieldPayload,
   CreateCustomerPayload,
+  Customer as gqlCustomer,
   CustomerConnection,
   CustomerEdge,
   CustomerFormField,
   CustomerFormFieldInput,
   CustomerInput,
   OrderDirection,
-  QueryFilterCustomersArgs,
   PaginationDirection,
-  Customer as gqlCustomer
+  QueryFilterCustomersArgs,
 } from "../graphql.ts";
 import { UserRepository } from "../user/user.repository.ts";
 import { CustomerFormFieldRepository } from "./customer-form-field.repository.ts";
 import { CustomerRepository } from "./customer.repository.ts";
 import { Customer } from "./models/customer.ts";
 import { customerFormField } from "./models/customer-form-field.ts";
-import { fromPairs } from '@es-toolkit/es-toolkit/compat';
-import { decodeBase64, encodeBase64 } from '@std/encoding/base64'
-import { UpdateCustomerPayload, UpdateCustomerInput } from "../graphql.ts";
+import { fromPairs } from "@es-toolkit/es-toolkit/compat";
+import { decodeBase64, encodeBase64 } from "@std/encoding/base64";
+import {
+  DeleteCustomerPayload,
+  UpdateCustomerInput,
+  UpdateCustomerPayload,
+} from "../graphql.ts";
 
 export class CustomerService {
-
-
   constructor(
     private readonly customerFormFieldRepository: CustomerFormFieldRepository,
     private readonly userRepository: UserRepository,
     private readonly customerRepository: CustomerRepository,
   ) {}
 
+  async deleteCustomers(
+    userIds: string[],
+  ): Promise<DeleteCustomerPayload> {
+    await this.customerRepository.deleteCustomers(userIds);
+    return {
+      success: true,
+    };
+  }
+
   private createCursor = (customer: Customer, fieldName?: string) => {
-    const fieldValue = fieldName
-      ? customer.properties[fieldName]
+    const fieldValue: string | Date = fieldName
+      ? customer.properties[fieldName] as string
       : customer.createDate;
 
     if (!fieldValue) {
       throw new Error("Field value not found for field name: " + fieldName);
     }
 
-    const cursorStringValue =
-      fieldValue instanceof Date ? fieldValue.toISOString() : fieldValue;
+    const cursorStringValue = fieldValue instanceof Date
+      ? fieldValue.toISOString()
+      : fieldValue;
 
     return encodeBase64(cursorStringValue);
   };
@@ -104,8 +116,8 @@ export class CustomerService {
       throw new Error("Owner not found");
     }
 
-    const formFields =
-      await this.customerFormFieldRepository.findByOrganizationId(
+    const formFields = await this.customerFormFieldRepository
+      .findByOrganizationId(
         currentUser.organization.id,
       );
 
@@ -116,23 +128,25 @@ export class CustomerService {
         name: currentUser.organization.name,
       },
       createDate: DateTime.now().toUTC().toJSDate(),
-      properties: fromPairs(input.properties.map(({customerFormFieldId, value}) => {
-        const formField = formFields.find(
-          (field) => customerFormFieldId == field.id,
-        );
-
-        if (!formField) {
-          throw new Error(
-            "Form field not found with id: " +
-              customerFormFieldId,
+      properties: fromPairs(
+        input.properties.map(({ customerFormFieldId, value }) => {
+          const formField = formFields.find(
+            (field) => customerFormFieldId == field.id,
           );
-        }
 
-        return [
+          if (!formField) {
+            throw new Error(
+              "Form field not found with id: " +
+                customerFormFieldId,
+            );
+          }
+
+          return [
             formField.fieldName,
-            value
-        ]
-      })),
+            value,
+          ];
+        }),
+      ),
     });
 
     await this.customerRepository.save(newCustomer);
@@ -180,31 +194,36 @@ export class CustomerService {
   }
 
   async getCustomerById(id: string): Promise<gqlCustomer> {
-     const customer = await this.customerRepository.findCustomerById(id);
+    const customer = await this.customerRepository.findCustomerById(id);
 
-     if(!customer) {
-        throw new Error("Customer not found");
-     }
-
-     return customer.serialize();
-  }
-
-  async updateCustomer(customerId:string, input: UpdateCustomerInput, uuid:string): Promise<UpdateCustomerPayload> {
-    const customer = await this.customerRepository.findCustomerById(customerId);
-
-    if(!customer) {
+    if (!customer) {
       throw new Error("Customer not found");
     }
 
-    const properties = Object.fromEntries(input.properties.map(({name, value}) => [name, value]));
+    return customer.serialize();
+  }
 
-    customer.update(properties)
+  async updateCustomer(
+    customerId: string,
+    input: UpdateCustomerInput,
+  ): Promise<UpdateCustomerPayload> {
+    const customer = await this.customerRepository.findCustomerById(customerId);
+
+    if (!customer) {
+      throw new Error("Customer not found");
+    }
+
+    const properties = Object.fromEntries(
+      input.properties.map(({ name, value }) => [name, value]),
+    );
+
+    customer.update(properties);
 
     await this.customerRepository.save(customer);
 
     return {
       success: true,
       customer: customer.serialize(),
-    }
+    };
   }
 }

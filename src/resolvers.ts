@@ -1,8 +1,8 @@
 import { Resolvers } from "./graphql.ts";
 import {
   customerService,
-  ownerService,
   organizationService,
+  ownerService,
 } from "./common/di.ts";
 import { YogaInitialContext } from "graphql-yoga";
 
@@ -21,9 +21,9 @@ export const resolvers: Resolvers<GraphQlContext> = {
     filterCustomers: async (_, params, { userId }) => {
       return await customerService.filterCustomers(params, userId);
     },
-    getCustomerById: async (_, {id}, { userId }) => {
-       return await customerService.getCustomerById(id);
-    }
+    getCustomerById: async (_, { id }) => {
+      return await customerService.getCustomerById(id);
+    },
   },
   Mutation: {
     createCustomerFormField: async (_, { input }, { userId }) => {
@@ -39,8 +39,11 @@ export const resolvers: Resolvers<GraphQlContext> = {
     createCustomer: async (_, { input }, { userId }) => {
       return await customerService.createCustomer(input, userId);
     },
-    updateCustomer: async (_, { input, id }, { userId }) => {
-      return await customerService.updateCustomer(id, input, userId)
-    }
+    updateCustomer: async (_, { input, id }) => {
+      return await customerService.updateCustomer(id, input);
+    },
+    deleteCustomers: async (_, { userIds }) => {
+      return await customerService.deleteCustomers(userIds);
+    },
   },
 };
