@@ -154,7 +154,6 @@ export type Query = {
   __typename?: 'Query';
   filterCustomers: CustomerConnection;
   getCustomerById: Customer;
-  searchCustomers: Array<Customer>;
   getCustomerFormFields: Array<CustomerFormField>;
   user?: Maybe<User>;
 };
@@ -166,16 +165,12 @@ export type QueryFilterCustomersArgs = {
   cursor?: InputMaybe<Scalars['String']['input']>;
   direction?: InputMaybe<PaginationDirection>;
   orderBy?: InputMaybe<CustomerOrder>;
+  searchText?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryGetCustomerByIdArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type QuerySearchCustomersArgs = {
-  searchText: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -424,7 +419,6 @@ export type CreateCustomerPayloadResolvers<ContextType = any, ParentType extends
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   filterCustomers?: Resolver<ResolversTypes['CustomerConnection'], ParentType, ContextType, RequireFields<QueryFilterCustomersArgs, 'filters'>>;
   getCustomerById?: Resolver<ResolversTypes['Customer'], ParentType, ContextType, RequireFields<QueryGetCustomerByIdArgs, 'id'>>;
-  searchCustomers?: Resolver<Array<ResolversTypes['Customer']>, ParentType, ContextType, RequireFields<QuerySearchCustomersArgs, 'searchText'>>;
   getCustomerFormFields?: Resolver<Array<ResolversTypes['CustomerFormField']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 };

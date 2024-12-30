@@ -66,80 +66,6 @@ export class CustomerRepository {
     return customer;
   }
 
-  async filterCustomers(options: {
-    filters: filter[];
-    take: number;
-    paginationDirection: PaginationDirection;
-    cursor: {
-      value: string;
-      field: string;
-    };
-    order: OrderDirection;
-    organizationId: string;
-  }): Promise<Customer[]> {
-    const {
-      filters,
-      take,
-      cursor,
-      order,
-      organizationId,
-      paginationDirection,
-    } = options;
-    const customers = this.db.collection("customers");
-
-    const aggregationPipeline = [
-      // Match documents based on organization ID
-      {
-        $match: {
-          "organization.id": organizationId,
-        },
-      },
-      // Match documents based on the cursor
-      {
-        $match: {
-          [cursor.field]: {
-            [this.getCursorOperator(order, paginationDirection)]:
-              cursor.field === "createDate"
-                ? new Date(cursor.value)
-                : cursor.value,
-          },
-        },
-      },
-      // Apply filters
-      ...(filters.length > 0
-        ? filters.map((filter) => ({
-          $match: {
-            [`properties.${filter.fieldName}`]: {
-              $regex: filter.value,
-              $options: "i",
-            },
-          },
-        }))
-        : []),
-      // Sort the results
-      {
-        $sort: {
-          [cursor.field]: this.getSortDirection(
-            order,
-            paginationDirection,
-          ),
-        },
-      },
-      // Limit the number of results
-      {
-        $limit: take,
-      },
-    ];
-
-    const result = await customers.aggregate(aggregationPipeline).toArray();
-
-    return result.map((document) => {
-      return new Customer(
-        CustomerSchema.parse({ ...document, _id: document._id.toString() }),
-      );
-    });
-  }
-
   async findCustomerById(id: string): Promise<Customer | null> {
     const result = await this.db.collection("customers").findOne({
       _id: new ObjectId(id),
@@ -162,6 +88,97 @@ export class CustomerRepository {
       _id: {
         $in: ids.map((id) => new ObjectId(id)),
       },
+    });
+  }
+
+  async filterCustomers(options: {
+    searchValue: string;
+    take: number;
+    paginationDirection: PaginationDirection;
+    cursor: {
+      value: string;
+      field: string;
+    };
+    order: OrderDirection;
+    filters: filter[];
+    organizationId: string;
+  }): Promise<Customer[]> {
+    const {
+      searchValue,
+      take,
+      cursor,
+      order,
+      paginationDirection,
+      filters,
+      organizationId,
+    } = options;
+    const customers = this.db.collection("customers");
+
+    const cursorOperator = this.getCursorOperator(order, paginationDirection);
+    const sortDirection = this.getSortDirection(order, paginationDirection);
+
+    // Build the aggregation pipeline
+    const aggregationPipeline = [
+      // Match documents using full-text search and organization
+      {
+        $match: {
+          $and: [
+            {
+              $text: {
+                $search: searchValue,
+              },
+            },
+            {
+              "organization.id": organizationId,
+            },
+          ],
+        },
+      },
+      // Apply additional filters if provided
+      ...(filters.length > 0
+        ? filters.map((filter) => ({
+          $match: {
+            [`properties.${filter.fieldName}`]: {
+              $regex: filter.value,
+              $options: "i", // Case-insensitive search
+            },
+          },
+        }))
+        : []),
+      // Match documents based on the cursor
+      {
+        $match: {
+          [cursor.field]: {
+            [cursorOperator]: cursor.field === "createDate"
+              ? new Date(cursor.value)
+              : cursor.value,
+          },
+        },
+      },
+      // Sort results based on text score and cursor field
+      {
+        $sort: {
+          score: { $meta: "textScore" }, // First sort by text score
+          [cursor.field]: sortDirection, // Then sort by cursor field
+        },
+      },
+      // Limit the number of results
+      {
+        $limit: take,
+      },
+    ];
+
+    // Execute the aggregation query
+    const result = await customers.aggregate(aggregationPipeline).toArray();
+
+    // Map the results to Customer objects
+    return result.map((document) => {
+      return new Customer(
+        CustomerSchema.parse({
+          ...document,
+          _id: document._id.toString(),
+        }),
+      );
     });
   }
 }

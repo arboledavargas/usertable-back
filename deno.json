@@ -3,7 +3,8 @@
     "dev": "deno -A --watch ./src/main.ts",
     "debug": "deno -A --watch --inspect ./src/main.ts",
     "db:start-mongo": "docker run --name mongodb-container -d -p 27017:27017 -v mongo-data:/data/db -e MONGO_INITDB_ROOT_USERNAME=myuser -e MONGO_INITDB_ROOT_PASSWORD=mypass mongo:latest",
-    "generate:graphql": "deno -A codegen.ts"
+    "generate:graphql": "deno -A codegen.ts",
+    "db:migrate": "deno --env-file -A migrations.ts"
   },
   "imports": {
     "@apollo/server": "npm:@apollo/server@^4.11.0",

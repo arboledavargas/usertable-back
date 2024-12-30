@@ -127,9 +127,9 @@ type Query {
         cursor: String
         direction: PaginationDirection
         orderBy: CustomerOrder
+        searchText: String
     ): CustomerConnection!
     getCustomerById(id: String!): Customer!
-    searchCustomers(searchText: String!): [Customer!]!
     getCustomerFormFields: [CustomerFormField!]!
     user: User
 }
