@@ -92,7 +92,6 @@ export class CustomerRepository {
   }
 
   async filterCustomers(options: {
-    searchValue: string;
     take: number;
     paginationDirection: PaginationDirection;
     cursor: {
@@ -104,7 +103,6 @@ export class CustomerRepository {
     organizationId: string;
   }): Promise<Customer[]> {
     const {
-      searchValue,
       take,
       cursor,
       order,
@@ -122,16 +120,7 @@ export class CustomerRepository {
       // Match documents using full-text search and organization
       {
         $match: {
-          $and: [
-            {
-              $text: {
-                $search: searchValue,
-              },
-            },
-            {
-              "organization.id": organizationId,
-            },
-          ],
+          "organization.id": organizationId,
         },
       },
       // Apply additional filters if provided
@@ -158,8 +147,7 @@ export class CustomerRepository {
       // Sort results based on text score and cursor field
       {
         $sort: {
-          score: { $meta: "textScore" }, // First sort by text score
-          [cursor.field]: sortDirection, // Then sort by cursor field
+          [cursor.field]: sortDirection,
         },
       },
       // Limit the number of results
